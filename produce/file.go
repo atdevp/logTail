@@ -14,7 +14,7 @@ import (
 func WriteToChannel(c chan sarama.ProducerMessage, filename string, listentip string, topic string){
 	// 读文件
 	t, err := tail.TailFile(filename, tail.Config{
-        Follow:     true,
+        Follow:    true,
         ReOpen:    true,
         Poll:      true,
         Location:  &tail.SeekInfo{Offset: 0, Whence: 2},

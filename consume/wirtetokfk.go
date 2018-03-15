@@ -10,7 +10,6 @@ import (
 
 
 func WriteToKakc(c chan sarama.ProducerMessage, brokers string){
-
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Retry.Max = 5
