@@ -11,10 +11,10 @@ import (
 
 
 var (
-    filename = kingpin.Arg("filename", "log file").Required().String()
-    topic  = kingpin.Arg("topic", "topic name").Required().String()
-    brokers = kingpin.Arg("brokers", "kafka brokers").Required().String()
-    httpport = kingpin.Arg("httpport", "http port").Required().String()
+    filename  = kingpin.Arg("filename", "log file").Required().String()
+    topic     = kingpin.Arg("topic", "topic name").Required().String()
+    brokers   = kingpin.Arg("brokers", "kafka brokers").Required().String()
+    httpport  = kingpin.Arg("httpport", "http port").Required().String()
     listentip = kingpin.Arg("listentip", "listen ip address").Required().String()
 )
 

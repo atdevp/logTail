@@ -29,8 +29,8 @@ func WriteToChannel(c chan sarama.ProducerMessage, filename string, listentip st
         key := listentip + "_" + t.Format("20060102150405")
         msg := &sarama.ProducerMessage{
             Topic: topic,
-            Key: sarama.StringEncoder(line.Text),
-            Value: sarama.StringEncoder(key),
+            Key: sarama.StringEncoder(key),
+            Value: sarama.StringEncoder(line.Text),
         }
         c <- *msg
     }
