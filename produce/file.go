@@ -26,7 +26,7 @@ func WriteToChannel(c chan sarama.ProducerMessage, filename string, listentip st
 
     for line := range t.Lines{
         var t = time.Now()
-        key := listentip + "_" + t.Format("20060102150405")
+        key := listentip + "_" + t.Format("2006-01-02T15:04:05Z07:00")
         msg := &sarama.ProducerMessage{
             Topic: topic,
             Key: sarama.StringEncoder(key),

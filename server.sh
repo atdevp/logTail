@@ -1,19 +1,27 @@
 #!/bin/bash
 
-name=`basename $0`
+CURDIR=$(cd $(dirname ${BASH_SOURCE[0]}); pwd )
+
+logfile="/opt/apps/netty-server-template/logs/info.log"
+topic="push-huawei-receipt"
+broker="10.18.75.121:9092,10.18.75.122:9092,10.18.75.123:9092,10.18.75.124:9092,10.18.75.125:9092,10.18.75.126:9092,10.18.75.127:9092,10.18.75.128:9092,10.18.75.129:9092,10.18.75.130:9092"
+ip="10.18.38.31"
+http_port="15201"
+
 case $1 in
     start)
-        nohup ./log-shiper  /opt/wwwlogs/nginxlog/agif.access.log agif_one 10.13.89.97:9092 8301  10.16.10.21 >> ./log-shiper.log &
+        cd 
+        nohup ${CURDIR}/log-shiper  ${logfile} ${topic} ${broker}  ${ip} ${http_port} >> ${CURDIR}/collect-${topic}.log 2>&1  &
     ;;
     stop)
-        ps auxwww| grep "agif_one"| grep -v grep | awk '{print $2}' | xargs kill -9
+        ps auxwww| grep "${topic}"| grep -v grep | awk '{print $2}' | xargs kill -9
     ;;
     restart)
-        ps auxwww| grep "agif_one"| grep -v grep | xargs kill -9
-        nohup ./log-shiper  /opt/wwwlogs/nginxlog/agif.access.log agif_one 10.13.89.97:9092 8301  10.16.10.21 >> ./log-shiper.log &
+        ps auxwww| grep "${topic}"| grep -v grep | awk '{print $2}' | xargs kill -9
+        nohup ${CURDIR}/log-shiper  ${logfile} ${topic} ${broker}  ${ip} ${http_port} >> ${CURDIR}/collect-${topic}.log 2>&1  &
     ;;
     *)
-        echo "Usage: $name [start|stop|restart]"
+        echo "Usage: $0 [start|stop|restart]"
         exit -1
     ;;
 esac

@@ -10,12 +10,19 @@ import (
 
 
 func WriteToKakc(c chan sarama.ProducerMessage, brokers string){
+	tool.Logger.Info(brokers)
+	tool.Logger.Info(brokers)
+	tool.Logger.Info(brokers)
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Retry.Max = 5
     config.Producer.Return.Successes = true
-    config.Producer.Timeout = 5 * time.Second
-    p, err := sarama.NewSyncProducer(strings.Split(brokers, ","), config)
+	config.Producer.Timeout = 5 * time.Second
+	test := strings.Split(brokers, ",")
+	tool.Logger.Info(test)
+	tool.Logger.Info(test)
+	tool.Logger.Info(test)
+    p, err := sarama.NewSyncProducer(test, config)
     if err != nil {
         tool.Logger.Error(err.Error())
         os.Exit(-1)
