@@ -2,11 +2,11 @@
 
 CURDIR=$(cd $(dirname ${BASH_SOURCE[0]}); pwd )
 
-logfile="/opt/apps/netty-server-template/logs/info.log"
-topic="push-huawei-receipt"
+logfile="/opt/wwwlogs/nginxlog/agif.access.log"
+topic="raw-nginx-agif-new"
 broker="10.18.75.121:9092,10.18.75.122:9092,10.18.75.123:9092,10.18.75.124:9092,10.18.75.125:9092,10.18.75.126:9092,10.18.75.127:9092,10.18.75.128:9092,10.18.75.129:9092,10.18.75.130:9092"
-ip="10.18.38.31"
-http_port="15201"
+ip="10.13.89.92"
+http_port="15202"
 
 case $1 in
     start)

@@ -2,8 +2,6 @@ package main
 
 import (
     kingpin "gopkg.in/alecthomas/kingpin.v2"
-    "github.com/Shopify/sarama"
-    consume "log-shiper/consume"
     "log-shiper/produce"
     "log-shiper/httpserver"
     "log-shiper/tool"
@@ -24,9 +22,6 @@ func init(){
 }
 
 func main(){
-    c := make(chan sarama.ProducerMessage)
-    go produce.WriteToChannel(c, *filename, *listentip, *topic )
-    go consume.WriteToKakc(c, *brokers)
-    go consume.WriteToKakc(c, *brokers)
+    go produce.WriteToKafka(*brokers, *filename, *listentip, *topic )
     httpserver.Start(*httpport)
 }
