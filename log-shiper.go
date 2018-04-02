@@ -2,11 +2,13 @@ package main
 
 import (
     "flag"
+    "github.com/Shopify/sarama"
+    "os"
+    "fmt"
     "log-shiper/produce"
     "log-shiper/httpserver"
     "log-shiper/tool"
-    "os"
-    "fmt"
+    consume "log-shiper/consume"
 )
 
 
@@ -49,13 +51,14 @@ func main(){
         "port": p,
     }
     n, ret := tool.Argument(arg)
-    fmt.Println(ret)
-    fmt.Println(ret)
-    fmt.Println(ret)
     if !ret {
         tool.Logger.Error("%s is null", n)
         flag.Usage()
     }
-    go produce.WriteToKafka(b, f, a, t )
+    c := make(chan sarama.ProducerMessage)
+    go produce.WriteToChannel(c, f, a, t )
+    go consume.WriteToKafka(c, b)
+    go consume.WriteToKafka(c, b)
+    go consume.WriteToKafka(c, b)
     httpserver.Start(p)
 }
