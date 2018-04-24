@@ -6,7 +6,7 @@ import (
 	"os"
 	"fmt"
     "github.com/Shopify/sarama"
-    "log-shiper/tool"
+    "github.com/log-shiper/tool"
 )
 
 
@@ -16,6 +16,10 @@ func WriteToKafka(c chan sarama.ProducerMessage, brokers string){
     config.Producer.Retry.Max = 5
     config.Producer.Return.Successes = true
     config.Producer.Timeout = 5 * time.Second
+    // 用来推接视频push发送消息。 联系人： 视频 亚军 & 客户端 孙友军
+    // config.Net.SASL.Enable = true
+    // config.Net.SASL.User = "push"
+    // config.Net.SASL.Password = "push_pwd"
     ips := strings.Split(brokers, ",")
     p, err := sarama.NewSyncProducer(ips, config)
     if err != nil {

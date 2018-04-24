@@ -5,10 +5,10 @@ import (
     "github.com/Shopify/sarama"
     "os"
     "fmt"
-    "log-shiper/produce"
-    "log-shiper/httpserver"
-    "log-shiper/tool"
-    consume "log-shiper/consume"
+    "github.com/log-shiper/produce"
+    "github.com/log-shiper/httpserver"
+    "github.com/log-shiper/tool"
+    consume "github.com/log-shiper/consume"
 )
 
 
@@ -21,9 +21,7 @@ var (
     p   string
 )
 func usage(){
-    fmt.Fprintf(os.Stderr, `Version: log-shiper/1.0.0
-Usage: log-shiper  [-f filename] [-t topic] [-b brokers] [-a ip] [-p port] -[h]         
-Options:`)
+    fmt.Fprintf(os.Stderr, `Usage: log-shiper  [-f filename] [-t topic] [-b brokers] [-a ip] [-p port] -[h]`)
     flag.PrintDefaults()
     os.Exit(-1)
 }
@@ -56,7 +54,7 @@ func main(){
         flag.Usage()
     }
     c := make(chan sarama.ProducerMessage)
-    go produce.WriteToChannel(c, f, a, t )
+    go produce.WriteToChannel(c, f, a, t, p)
     go consume.WriteToKafka(c, b)
     go consume.WriteToKafka(c, b)
     go consume.WriteToKafka(c, b)

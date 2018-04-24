@@ -5,12 +5,11 @@ import (
     "os"
 	"github.com/Shopify/sarama"
     "github.com/hpcloud/tail"
-    "log-shiper/tool"	
+    "github.com/log-shiper/tool"	
 )
 
-func WriteToChannel(c chan sarama.ProducerMessage,  filename string, listentip string, topic string){
-	// 读文件
-	t, err := tail.TailFile(filename, tail.Config{
+func WriteToChannel(c chan sarama.ProducerMessage,  file string, ip string, topic string, port string){
+	t, err := tail.TailFile(file, tail.Config{
         Follow:    true,
         ReOpen:    true,
         Poll:      true,
@@ -23,7 +22,7 @@ func WriteToChannel(c chan sarama.ProducerMessage,  filename string, listentip s
 
     for line := range t.Lines{
         var t = time.Now()
-        key := listentip + "_" + t.Format("2006-01-02T15:04:05Z07:00")
+        key := ip + ":" + port + "_" + t.Format("2006-01-02T15:04:05Z07:00")
         msg := &sarama.ProducerMessage{
             Topic: topic,
             Key: sarama.StringEncoder(key),
