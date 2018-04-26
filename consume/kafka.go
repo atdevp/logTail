@@ -24,7 +24,7 @@ func WriteToKafka(c chan sarama.ProducerMessage, brokers string){
     p, err := sarama.NewSyncProducer(ips, config)
     if err != nil {
         tool.Logger.Error(err.Error())
-        os.Exit(-1)
+        // os.Exit(-1)
     }
     defer func() {
         if err := p.Close(); err != nil {
@@ -37,13 +37,13 @@ func WriteToKafka(c chan sarama.ProducerMessage, brokers string){
             partition, offset, err := p.SendMessage(&msg)
             if err != nil {
                 tool.Logger.Error(err.Error())
-                os.Exit(-1)
+                // os.Exit(-1)
 			}
 			msg := fmt.Sprintf("Msg is stored in parttion,offset: %d %d", partition, offset)
             tool.Logger.Info(msg)
         }else{
             tool.Logger.Error("read data form channel error.")
-            os.Exit(-1)
+            // os.Exit(-1)
         }
     }
 }

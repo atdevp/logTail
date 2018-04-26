@@ -2,7 +2,7 @@ package produce
 
 import (
     "time"
-    "os"
+    // "os"
 	"github.com/Shopify/sarama"
     "github.com/hpcloud/tail"
     "github.com/log-shiper/tool"	
@@ -17,7 +17,7 @@ func WriteToChannel(c chan sarama.ProducerMessage,  file string, ip string, topi
     })
     if err != nil {
         tool.Logger.Error(err.Error())
-        os.Exit(-1)
+        // os.Exit(-1)
     }
 
     for line := range t.Lines{
