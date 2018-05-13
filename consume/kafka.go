@@ -1,7 +1,6 @@
 package cousume
 
 import (
-    "time"
     "strings"
 	"os"
 	"fmt"
@@ -12,10 +11,10 @@ import (
 
 func WriteToKafka(c chan sarama.ProducerMessage, brokers string){
     config := sarama.NewConfig()
-    config.Producer.RequiredAcks = sarama.WaitForAll
+    config.Producer.RequiredAcks = sarama.WaitForLocal
     config.Producer.Retry.Max = 5
+    config.Producer.Partitioner = sarama.NewRandomPartitioner
     config.Producer.Return.Successes = true
-    config.Producer.Timeout = 5 * time.Second
     // 用来推接视频push发送消息。 联系人： 视频 亚军 & 客户端 孙友军
     // config.Net.SASL.Enable = true
     // config.Net.SASL.User = "push"
