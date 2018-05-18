@@ -2,47 +2,57 @@ package cousume
 
 import (
     "strings"
-	"os"
-	"fmt"
+    "time"
+    "log"
+    "fmt"
+    "strconv"
     "github.com/Shopify/sarama"
-    "github.com/log-shiper/tool"
+    "github.com/log-shiper/g"
 )
 
+type WriteToKafka struct{
+    Brokers string
+    Topic string
+    MsgKey  g.MsgKey
+}
 
-func WriteToKafka(c chan sarama.ProducerMessage, brokers string){
+func (w *WriteToKafka) Write(channel chan string){
     config := sarama.NewConfig()
     config.Producer.RequiredAcks = sarama.WaitForLocal
     config.Producer.Retry.Max = 5
     config.Producer.Partitioner = sarama.NewRandomPartitioner
     config.Producer.Return.Successes = true
-    // 用来推接视频push发送消息。 联系人： 视频 亚军 & 客户端 孙友军
-    // config.Net.SASL.Enable = true
-    // config.Net.SASL.User = "push"
-    // config.Net.SASL.Password = "push_pwd"
-    ips := strings.Split(brokers, ",")
-    p, err := sarama.NewSyncProducer(ips, config)
-    if err != nil {
-        tool.Logger.Error(err.Error())
-        // os.Exit(-1)
+    brokers := strings.Split(w.Brokers, ",")
+    client, err := sarama.NewSyncProducer(brokers, config)
+    if err != nil{
+        log.Print("create producer fail. reason is %s." , err.Error())
     }
     defer func() {
-        if err := p.Close(); err != nil {
-            tool.Logger.Error(err.Error())
-            os.Exit(-1)
+        if err := client.Close(); err != nil {
+            log.Print("close producer fail. reason is %s.", err.Error())
         }
     }()
+
     for {
-        if msg, ok := <- c; ok{
-            partition, offset, err := p.SendMessage(&msg)
+        if line, ok := <- channel; ok{
+            t := time.Now()
+            strPort := strconv.FormatInt(w.MsgKey.Port, 10)
+            key := w.MsgKey.Addr + ":" + strPort + "_" + t.Format("2006-01-02T15:04:05Z07:00")
+
+            msg := sarama.ProducerMessage{
+                Topic: w.Topic,
+                Value: sarama.StringEncoder(line),
+                Key: sarama.StringEncoder(key),
+            }
+            partition, offset, err := client.SendMessage(&msg)
             if err != nil {
-                tool.Logger.Error(err.Error())
-                // os.Exit(-1)
+                log.Print("send msg to kafka fail. reason is %s.", err.Error())
 			}
-			msg := fmt.Sprintf("Msg is stored in parttion,offset: %d %d", partition, offset)
-            tool.Logger.Info(msg)
+			logMsg := fmt.Sprintf("Msg is stored in parttion,offset: %d %d", partition, offset)
+            log.Print(logMsg)
         }else{
-            tool.Logger.Error("read data form channel error.")
-            // os.Exit(-1)
+            log.Print("read data form channel error.")
         }
     }
+
 }

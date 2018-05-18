@@ -2,13 +2,15 @@ package main
 
 import (
     "flag"
-    "github.com/Shopify/sarama"
     "os"
+    "log"
     "fmt"
+    "strconv"
     "github.com/log-shiper/produce"
     "github.com/log-shiper/httpserver"
     "github.com/log-shiper/tool"
     consume "github.com/log-shiper/consume"
+    "github.com/log-shiper/g"
 )
 
 
@@ -20,6 +22,22 @@ var (
     a   string
     p   string
 )
+
+type LogProcess struct {
+	read      Reader
+    write     Writer
+    ch chan string
+}
+
+type Reader interface{
+	Read(ch chan string)
+}
+
+type Writer interface {
+	Write(ch chan string)
+}
+
+
 func usage(){
     fmt.Fprintf(os.Stderr, `Usage: log-shiper  [-f filename] [-t topic] [-b brokers] [-a ip] [-p port] -[h]`)
     flag.PrintDefaults()
@@ -50,13 +68,29 @@ func main(){
     }
     n, ret := tool.Argument(arg)
     if !ret {
-        tool.Logger.Error("%s is null", n)
+        logMsg := fmt.Sprintf("%s is null", n)
+        log.Print(logMsg)
         flag.Usage()
     }
-    c := make(chan sarama.ProducerMessage)
-    go produce.WriteToChannel(c, f, a, t, p)
-    go consume.WriteToKafka(c, b)
-    go consume.WriteToKafka(c, b)
-    go consume.WriteToKafka(c, b)
+    r := &produce.ReadFromFile{
+        Path: f,
+    }
+    port, _ := strconv.ParseInt(p, 10, 64)
+    w := &consume.WriteToKafka{
+        Brokers: b,
+        Topic: t,
+        MsgKey: g.MsgKey{
+            Addr: a,
+            Port: port,
+        },
+    }
+    c := make(chan string)
+    lp := &LogProcess{
+        read: r,
+        write: w,
+        ch: c,
+    }
+    go lp.read.Read(lp.ch)
+    go lp.write.Write(lp.ch)
     httpserver.Start(p)
 }
