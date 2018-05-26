@@ -2,17 +2,27 @@ package httpserver
 
 import (
     "net/http"
-    "fmt"
+    "time"
+    "encoding/json"
+    "io"
+    "github.com/log-shiper/g"
 )
 
-func HsttpServer(w http.ResponseWriter, r *http.Request){
-    fmt.Fprintln(w, "<h1>hello world</h1>")
+type Monitor struct {
+	StartTime time.Time
+	Data g.SystemInfo
+	
 }
 
-func Start(port string){
+func (m *Monitor) Start(ch chan string, port string) {
+    http.HandleFunc("/monitor", func(w http.ResponseWriter, r *http.Request){
+        m.Data.RunTime = time.Now().Sub(m.StartTime).String()
+        m.Data.Delay = len(ch)
 
-    mux := http.NewServeMux()
-    mux.HandleFunc("/", HsttpServer)
+        ret, _  := json.MarshalIndent(m.Data, "", "\t")
+        io.WriteString(w, string(ret))
+    })
     var socket = ":" + port
-    http.ListenAndServe(socket, mux) 
+    http.ListenAndServe(socket, nil) 
+
 }

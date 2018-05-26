@@ -5,3 +5,7 @@ type MsgKey struct {
 	Port int64
 }
 
+type SystemInfo struct {
+	Delay   int    `json:"delay"`
+	RunTime string `json:"runTime"`
+}

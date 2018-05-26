@@ -81,6 +81,12 @@
 			"revisionTime": "2017-07-14T08:24:55Z"
 		},
 		{
+			"checksumSHA1": "6u6M+ydTkWgOlM+UK+wOYnHhpAU=",
+			"path": "github.com/rcrowley/go-metrics",
+			"revision": "e181e095bae94582363434144c61a9653aff6e50",
+			"revisionTime": "2017-11-28T17:04:26Z"
+		},
+		{
 			"checksumSHA1": "mFhvo8ZlZg1Y1wxet9ndm6JQkJQ=",
 			"origin": "github.com/hpcloud/tail/vendor/gopkg.in/fsnotify.v1",
 			"path": "gopkg.in/fsnotify.v1",
