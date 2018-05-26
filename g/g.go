@@ -2,7 +2,7 @@ package g
 
 type MsgKey struct {
 	Addr string
-	Port int64
+	Port string
 }
 
 type SystemInfo struct {

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 	"time"
 
 	consume "github.com/log-shiper/consume"
@@ -75,13 +74,12 @@ func main() {
 	r := &produce.ReadFromFile{
 		Path: f,
 	}
-	port, _ := strconv.ParseInt(p, 10, 64)
 	w := &consume.WriteToKafka{
 		Brokers: b,
 		Topic:   t,
 		MsgKey: g.MsgKey{
 			Addr: a,
-			Port: port,
+			Port: p,
 		},
 	}
 	c := make(chan string, 5000)
