@@ -82,7 +82,7 @@ func main() {
 			Port: p,
 		},
 	}
-	c := make(chan string, 5000)
+	c := make(chan string, 1000)
 	lp := &LogProcess{
 		read:  r,
 		write: w,
